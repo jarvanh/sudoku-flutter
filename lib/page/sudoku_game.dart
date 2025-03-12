@@ -64,7 +64,11 @@ class SudokuGamePage extends StatefulWidget {
 
 class _SudokuGamePageState extends State<SudokuGamePage>
     with WidgetsBindingObserver {
+  /// 选中的宫格
   int _chooseSudokuBox = 0;
+
+  /// 感知选中数字
+  int _perceptionNum = 0;
   bool _markOpen = false;
   bool _manualPause = false;
 
@@ -420,6 +424,9 @@ class _SudokuGamePageState extends State<SudokuGamePage>
             _state.hintLoss();
             _chooseSudokuBox = index;
             _gameStackCount();
+
+            // update choose state
+            _updateChooseState(index);
             return;
           }
         }
@@ -488,7 +495,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                       padding: EdgeInsets.all(5),
                       onPressed: pauseOnPressed,
                       child: Text(pauseText, style: TextStyle(fontSize: 15))))),
-          // tips 提示
+          // 提示 tips
           Expanded(
               flex: 1,
               child: Align(
@@ -497,7 +504,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                       padding: EdgeInsets.all(5),
                       onPressed: tipsOnPressed,
                       child: Text(tipsText, style: TextStyle(fontSize: 15))))),
-          // mark 笔记
+          // 笔记 mark record
           Expanded(
               flex: 1,
               child: Align(
@@ -508,7 +515,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                       child: Text(
                           "${_markOpen ? closeMarkText : enableMarkText}",
                           style: TextStyle(fontSize: 15))))),
-          // 退出
+          // 退出 exit
           Expanded(
               flex: 1,
               child: Align(
@@ -555,10 +562,27 @@ class _SudokuGamePageState extends State<SudokuGamePage>
       if (Matrix.getZone(index: index).isOdd) {
         gridCellBackgroundColor = Colors.white;
       } else {
-        gridCellBackgroundColor = Color.fromARGB(255, 0xCC, 0xCC, 0xCC);
+        gridCellBackgroundColor = Color.fromARGB(255, 0xDF, 0xDF, 0xDF);
       }
     }
     return gridCellBackgroundColor;
+  }
+
+  /// 选择感知
+  /// 用户触摸每一个框(cell),尝试获得其触摸的数字,然后赋予提醒效果
+  _choosePerception(int index) {
+    Sudoku sudoku = _state.sudoku!;
+    List<int> puzzle = sudoku.puzzle;
+    List<int> record = _state.record;
+
+    int perceptionNum = -1;
+    if (record[index] > 0) {
+      perceptionNum = record[index];
+    } else if (puzzle[index] > 0) {
+      perceptionNum = puzzle[index];
+    }
+
+    _perceptionNum = perceptionNum;
   }
 
   ///
@@ -572,8 +596,8 @@ class _SudokuGamePageState extends State<SudokuGamePage>
     List<int> record = _state.record;
     int num = puzzle[index];
 
-    Color textColor = Colors.blueGrey;
-    FontWeight textFontWeight = FontWeight.w800;
+    Color textColor = Colors.blueGrey.shade400;
+    FontWeight textFontWeight = FontWeight.w700;
     if (puzzle[index] == -1) {
       num = record[index];
       // from puzzle number with readonly
@@ -584,9 +608,32 @@ class _SudokuGamePageState extends State<SudokuGamePage>
         textColor = Colors.red;
       } else {
         // from user input num
-        textColor = Color.fromARGB(255, 0x16, 0x69, 0xA9);
+        textColor = Colors.black;
       }
     }
+
+    var _textContainer = Text('${num == -1 ? '' : num}',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 26,
+          fontWeight: textFontWeight,
+          color: textColor,
+        ));
+    if (num != -1 && num == _perceptionNum) {
+      _textContainer = Text('${num == -1 ? '' : num}',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 26,
+            fontWeight: textFontWeight,
+            color: textColor,
+            // 提示线
+            decoration: TextDecoration.underline,
+            decorationStyle: TextDecorationStyle.wavy,
+            decorationColor: Colors.deepOrangeAccent,
+            decorationThickness: 2.0,
+          ));
+    }
+
     final _cellContainer = Center(
       child: Container(
         alignment: Alignment.center,
@@ -594,15 +641,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
         decoration: BoxDecoration(
             color: _gridCellBgColor(index),
             border: Border.all(color: Colors.black12)),
-        child: Text(
-          '${num == -1 ? '' : num}',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 25,
-            fontWeight: textFontWeight,
-            color: textColor,
-          ),
-        ),
+        child: _textContainer,
       ),
     );
 
@@ -635,31 +674,54 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3),
                 itemBuilder: (BuildContext context, int _index) {
-                  String markNum =
-                      '${_state.mark[index][_index + 1] ? _index + 1 : ""}';
-                  return Text(markNum,
+                  double fontSize = 15;
+                  int markNum =
+                      _state.mark[index][_index + 1] ? _index + 1 : -1;
+                  String markNumText = '${markNum == -1 ? "" : markNum}';
+                  var _textContainer = Text(markNumText,
                       textAlign: TextAlign.center,
                       style: TextStyle(
+                          fontSize: fontSize,
+                          fontStyle: FontStyle.italic,
                           color: _chooseSudokuBox == index
                               ? Colors.white
-                              : Color.fromARGB(255, 0x16, 0x69, 0xA9),
-                          fontSize: 12));
+                              : Color.fromARGB(255, 0x26, 0x7A, 0xBC)));
+
+                  // 感知提示
+                  if (markNum != -1 && markNum == _perceptionNum) {
+                    _textContainer = Text(markNumText,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: fontSize,
+                          fontStyle: FontStyle.italic,
+                          color: _chooseSudokuBox == index
+                              ? Colors.white
+                              : Color.fromARGB(255, 0x26, 0x7A, 0xBC),
+                          // 提示线
+                          decoration: TextDecoration.underline,
+                          decorationStyle: TextDecorationStyle.wavy,
+                          decorationColor: Colors.deepOrangeAccent,
+                          decorationThickness: 1.8,
+                        ));
+                  }
+
+                  return _textContainer;
                 })));
 
     return markGrid;
   }
 
+  _updateChooseState(index) {
+    setState(() {
+      _chooseSudokuBox = index;
+      _choosePerception(index);
+    });
+  }
+
   // cell onTop function
   _cellOnTapBuilder(index) {
-    // log.d("_wellOnTapBuilder build $index ...");
     return () {
-      setState(() {
-        _chooseSudokuBox = index;
-      });
-      if (_state.sudoku!.puzzle[index] != -1) {
-        return;
-      }
-      // log.d('choose position : $index');
+      _updateChooseState(index);
     };
   }
 
