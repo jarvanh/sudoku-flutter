@@ -178,7 +178,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
           playSoundEffect();
           // game over show widget
           Widget gameOverWidget = Scaffold(
-              backgroundColor: Colors.white.withOpacity(0.85),
+              backgroundColor: Colors.white.withValues(alpha: 0.85),
               body: Align(
                   alignment: Alignment.center,
                   child: Column(
@@ -528,12 +528,12 @@ class _SudokuGamePageState extends State<SudokuGamePage>
         ]));
   }
 
-  Widget _willPopWidget(
-      BuildContext context, Widget child, PopInvokedCallback onWillPop) {
+  Widget _willPopWidget(BuildContext context, Widget child,
+      PopInvokedWithResultCallback onWillPop) {
     return PopScope(
       child: child,
       canPop: true,
-      onPopInvoked: onWillPop,
+      onPopInvokedWithResult: onWillPop,
     );
     // return WillPopScope(child: child, onWillPop: onWillPop);
   }
@@ -562,7 +562,8 @@ class _SudokuGamePageState extends State<SudokuGamePage>
       if (Matrix.getZone(index: index).isOdd) {
         gridCellBackgroundColor = Colors.white;
       } else {
-        gridCellBackgroundColor = Color.fromARGB(255, 0xDF, 0xDF, 0xDF);
+        // gridCellBackgroundColor = Color.fromARGB(255, 0xDF, 0xDF, 0xDF);
+        gridCellBackgroundColor = Color.fromARGB(255, 0xEE, 0xEE, 0xEE);
       }
     }
     return gridCellBackgroundColor;
@@ -596,8 +597,10 @@ class _SudokuGamePageState extends State<SudokuGamePage>
     List<int> record = _state.record;
     int num = puzzle[index];
 
-    Color textColor = Colors.blueGrey.shade400;
+    double fontSize = 25;
+    Color textColor = Colors.blueGrey.shade500;
     FontWeight textFontWeight = FontWeight.w700;
+    String? fontFamily = null;
     if (puzzle[index] == -1) {
       num = record[index];
       // from puzzle number with readonly
@@ -608,14 +611,17 @@ class _SudokuGamePageState extends State<SudokuGamePage>
         textColor = Colors.red;
       } else {
         // from user input num
-        textColor = Colors.black;
+        textColor = Colors.black87;
+        fontFamily = "handwriting_digits";
+        fontSize = 38;
       }
     }
 
     var _textContainer = Text('${num == -1 ? '' : num}',
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 26,
+          fontSize: fontSize,
+          fontFamily: fontFamily,
           fontWeight: textFontWeight,
           color: textColor,
         ));
@@ -623,7 +629,8 @@ class _SudokuGamePageState extends State<SudokuGamePage>
       _textContainer = Text('${num == -1 ? '' : num}',
           textAlign: TextAlign.center,
           style: TextStyle(
-            fontSize: 26,
+            fontSize: fontSize,
+            fontFamily: fontFamily,
             fontWeight: textFontWeight,
             color: textColor,
             // 提示线
@@ -646,10 +653,11 @@ class _SudokuGamePageState extends State<SudokuGamePage>
     );
 
     return InkWell(
-        highlightColor: Colors.blue,
-        customBorder: Border.all(color: Colors.blue),
-        child: _cellContainer,
-        onTap: onTap);
+      highlightColor: Colors.blue,
+      customBorder: Border.all(color: Colors.blue),
+      child: _cellContainer,
+      onTap: onTap,
+    );
   }
 
   ///
@@ -924,7 +932,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
         context,
         ScopedModelDescendant<SudokuState>(
             builder: (context, child, model) => _bodyWidget(context)),
-        (didPop) async {
+        (bool didPop, result) async {
           if (didPop) {
             _pause();
           }

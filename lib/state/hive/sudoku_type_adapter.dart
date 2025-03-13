@@ -1,8 +1,7 @@
 import 'package:hive/hive.dart';
 import 'package:sudoku_dart/sudoku_dart.dart';
 
-class SudokuAdapter extends TypeAdapter<Sudoku>{
-
+class SudokuAdapter extends TypeAdapter<Sudoku> {
   @override
   final typeId = 0;
 

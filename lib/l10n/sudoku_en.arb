@@ -7,13 +7,13 @@
   "@menuContinueGame":{
     "description":"menu of 'continue game' button text"
   },
-  "menuAISolver" : "AI Solver",
+  "menuAISolver" : "Sudoku Lens",
   "levelCancel": "Cancel",
   "levelEasy": "Easy",
   "levelMedium": "Medium",
   "levelHard": "Hard",
   "levelExpert": "Expert",
-  "sudokuGenerateText": "Waiting for sudoku generated...",
+  "sudokuGenerateText": "Generating your Sudoku...",
 
   "gameStatusInitialize" : "Initialize",
   "gameStatusGaming" : "Gaming",
@@ -29,7 +29,7 @@
   "enableMarkText" : "Enable Note",
   "closeMarkText" : "Close Note",
   "exitGameText" : "Exit Game",
-  "exitGameContentText": "Whether to end this round of Sudoku ?",
+  "exitGameContentText": "Would you like to end this Sudoku round ?",
   "openText" : "Open",
   "cancelText" : "Cancel",
   "pauseText" : "Pause Game",
@@ -38,7 +38,7 @@
   "elapsedTimeText" : "elapsed time",
   "continueGameContentText" : "Double click the screen to continue playing",
   "winnerConclusionText" : "Congratulations on completing the [%level%] Sudoku challenge!",
-  "failureConclusionText": "Unfortunately, this round of [%level%] Sudoku errors too many times, challenge failed!",
+  "failureConclusionText": "This round of Sudoku [%level%] had too many errors. Challenge failed!",
 
   "aiSolverLensScanTipsText": "take pictures to solve puzzle"
 }

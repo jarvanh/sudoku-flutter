@@ -42,7 +42,10 @@ Widget _aiSolverButton(BuildContext context) {
           context,
           (content) => CupertinoButton(
                 color: Colors.blue,
-                child: Text("$buttonLabel (test)"),
+                child: Text(
+                  "$buttonLabel / test /",
+                  style: TextStyle(color: Colors.white),
+                ),
                 onPressed: () async {
                   log.d("AI Solver Scanner");
 
