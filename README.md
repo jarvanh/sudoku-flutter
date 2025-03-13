@@ -1,8 +1,10 @@
-# Sudoku  
+# Sudoku
 
-[![License](https://img.shields.io/badge/License-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE) [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) [![Page Views Count](https://badges.toozhao.com/badges/01EH7R7D3FTYMYYSYDEFCTS251/green.svg)](https://badges.toozhao.com/badges/01EH7R7D3FTYMYYSYDEFCTS251/green.svg "Get your own page views count badge on badges.toozhao.com")
+[![License](https://img.shields.io/badge/License-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
+[![Platform](https://img.shields.io/badge/Platform-Flutter-02569B?logo=flutter)](https://flutter.dev)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0) 
 [![Codemagic build status](https://api.codemagic.io/apps/645f5680356332a7b6c82326/645f5680356332a7b6c82325/status_badge.svg)](https://codemagic.io/apps/645f5680356332a7b6c82326/645f5680356332a7b6c82325/latest_build)
-
+[![Page Views Count](https://badges.toozhao.com/badges/01EH7R7D3FTYMYYSYDEFCTS251/green.svg)](https://badges.toozhao.com/badges/01EH7R7D3FTYMYYSYDEFCTS251/green.svg "Get your own page views count badge on badges.toozhao.com")
 
 ## about
 
@@ -12,9 +14,7 @@ an open source Sudoku game application powered by Flutter .
 
 you can build your own Sudoku Game app, which allows you to quickly learn dart/flutter and its ecologically related application techniques, and is very friendly and instructional for tiro .
 
-
-
-### recent: 
+### recent:
 
 feature of AI/ML sudoku detect to solver is basically available now , welcome to try and feedback .
 
@@ -38,21 +38,20 @@ about contributing please read [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ![Bootstrap](./document/img/WX20230312-193408.jpg)![Game](./document/img/WX20230312-193423.jpg)
 
-
-
-
 ## plan-to-do
+
 - :ballot_box_with_check: AI sudoku solver with camera - working well :-)
 - :black_square_button: amendable detection puzzle on  AI Solver
 - :black_square_button: AI MODELS optimize with "amendable detection cell"
 
-
 ## environment
+
 - dart SDK: '>=3.0.0 <3.5.0' // records feature support
 - flutter SDK: '^3.0.0'
 - jdk 17 with Gradle Plugin 8.1.1 :new:
 
 ## dependency
+
 - [opencv_dart](https://github.com/rainyl/opencv_dart)
 - [tflite_flutter](https://github.com/tensorflow/flutter-tflite)
 - [sudoku_dart](https://github.com/forfuns/sudoku-dart) (sudoku core opensource  lib  )
@@ -62,11 +61,13 @@ about contributing please read [CONTRIBUTING.md](CONTRIBUTING.md)
 - sprintf
 
 ## platform support
+
 - android
 - iOS
 - ~~WEB (no plan support yet)~~
 
 ## install
+
 ```shell
 $> flutter pub get
 # options,when you change the lib/state/sudoku_state.dart file,make sure build hive adapter for the project
@@ -74,6 +75,7 @@ $> flutter packages pub run build_runner build
 ```
 
 ## run
+
 ```shell
 $> flutter devices
 1 connected device:
@@ -84,17 +86,19 @@ $> flutter run -d 09684738-362A-468F-80F2-1824A785D324
 ```
 
 ## pre-for-build
+
 ### android
+
 create a keystore for apk signature
 
 > On Windows
->
+> 
 > ```shell
 > keytool -genkey -v -keystore c:\Users\USER_NAME\key.jks -storetype JKS -keyalg RSA -keysize 2048 -validity 10000 -alias key
 > ```
-> 
 
 > On Mac/Linux
+> 
 > ```shell
 > keytool -genkey -v -keystore ~/key.jks -keyalg RSA -keysize 2048 -validity 10000 -alias key
 > ```
@@ -114,13 +118,13 @@ select the `Runner` project in the Xcode project navigator. then in the main vie
 more information pls reference official website : https://flutter.dev/docs/deployment/ios
 
 ## build
+
 ```shell
 # iOS
 $> flutter build iOS
 # android
 $> flutter build apk
 ```
-
 
 ## star history
 
