@@ -555,7 +555,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
     indexSet.addAll(colIndexes);
 
     if (index == _chooseSudokuBox) {
-      gridCellBackgroundColor = Color.fromARGB(255, 0x70, 0xF3, 0xFF);
+      gridCellBackgroundColor = Color.fromARGB(255, 0x7A, 0xF8, 0xF8);
     } else if (indexSet.contains(_chooseSudokuBox)) {
       gridCellBackgroundColor = Color.fromARGB(255, 0x44, 0xCE, 0xF6);
     } else {
@@ -613,7 +613,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
         // from user input num
         textColor = Colors.black87;
         fontFamily = "handwriting_digits";
-        fontSize = 38;
+        fontSize = 28;
       }
     }
 

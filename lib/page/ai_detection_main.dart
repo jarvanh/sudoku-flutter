@@ -62,6 +62,7 @@ class _AIDetectionMainWidgetState extends State<AIDetectionMainWidget> {
 
   late List<int> solution;
   late String solveMessage;
+  bool? oneSolution;
   int? selectedBox = null;
 
   /// cacheable widgets
@@ -105,9 +106,23 @@ class _AIDetectionMainWidgetState extends State<AIDetectionMainWidget> {
       }
 
       final sudoku = Sudoku(puzzle);
+
+      // one solution check
+      var isOneSolutionSudoku = true;
+      try {
+        var beginCheckTime = DateTime.now();
+        Sudoku(puzzle, strict: true);
+        var endCheckTime = DateTime.now();
+        log.d("check one solution time: ${endCheckTime.difference(beginCheckTime)}");
+      } catch (e) {
+        // puzzle is not one-solution sudoku
+        isOneSolutionSudoku = false;
+      }
+
       setState(() {
         solution = sudoku.solution;
         solveMessage = "";
+        oneSolution = isOneSolutionSudoku;
       });
     } catch (e) {
       // seem this puzzle can't be solve because is wrong puzzle
@@ -168,6 +183,7 @@ class _AIDetectionMainWidgetState extends State<AIDetectionMainWidget> {
                 : Colors.white;
         var cellText = "";
         var cellBorder = Border.all(color: Colors.amber, width: 1.5);
+        String? fontFamily = null;
 
         if (amendPuzzle[index] != SUDOKU_EMPTY_DIGIT) {
           // 修正的谜题
@@ -182,6 +198,7 @@ class _AIDetectionMainWidgetState extends State<AIDetectionMainWidget> {
           // solutions
           cellText = solution[index].toString();
           cellTextColor = Colors.white;
+          fontFamily = "handwriting_digits";
         }
 
         if (index == selectedBox) {
@@ -189,16 +206,26 @@ class _AIDetectionMainWidgetState extends State<AIDetectionMainWidget> {
           cellBorder = Border.all(color: Colors.blue, width: 2.0);
         }
 
+        var _cellText = Text(
+          cellText,
+          style: TextStyle(
+              fontFamily: fontFamily,
+              shadows: [
+                ui.Shadow(blurRadius: 1.18),
+                ui.Shadow(blurRadius: 3.68),
+                ui.Shadow(blurRadius: 5.38)
+              ],
+              fontSize: 26,
+              color: cellTextColor),
+        );
+
         var _cellContainer = Container(
           decoration: BoxDecoration(
             border: cellBorder,
           ),
-          child: Text(
-            cellText,
-            style: TextStyle(
-                shadows: [ui.Shadow(blurRadius: 3.68)],
-                fontSize: 30,
-                color: cellTextColor),
+          child: Container(
+            child: _cellText,
+            margin: EdgeInsets.only(left: 5.0),
           ),
         );
 
@@ -262,6 +289,18 @@ class _AIDetectionMainWidgetState extends State<AIDetectionMainWidget> {
             style: TextStyle(fontWeight: FontWeight.bold, color: Colors.red),
           ),
         ),
+        Center(
+            child: Text(
+          oneSolution == null
+              ? ""
+              : oneSolution!
+                  ? "✅one solution puzzle"
+                  : "❌this puzzle is not one solution",
+          style: TextStyle(
+            color:
+                oneSolution != null && oneSolution! ? Colors.green : Colors.red,
+          ),
+        )),
         Center(
           child: SizedBox(
               width: uiImage.width.toDouble(),
