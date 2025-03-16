@@ -77,7 +77,14 @@ class AIDetectPaintPage extends StatelessWidget {
           var colIndex = (x ~/ rowBlock) + ((x % rowBlock > rowBlockN) ? 1 : 0);
           var rowIndex = (y ~/ colBlock) + ((y % colBlock > colBlockN) ? 1 : 0);
           int index = (rowIndex * 9 + colIndex).toInt();
-
+          /*
+          * There is a certain probability that the calculation of the area
+          * where the numbers are located will extend beyond the 9*9 grid
+          * (i.e., beyond the 81-square grid).
+          * */
+          if(index>81){
+            return;
+          }
           detectRefs[index] = DetectRef(
             index: index,
             value: box.classId,

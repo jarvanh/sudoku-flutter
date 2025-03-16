@@ -1,9 +1,14 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:ffi/ffi.dart';
+import 'dart:ffi';
+import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:sudoku/ml/yolov8/yolov8_output.dart';
+import 'package:sudoku/native/sudoku.dart';
 import 'package:sudoku/page/ai_detection_painter.dart';
 import 'package:sudoku_dart/sudoku_dart.dart';
 
@@ -111,11 +116,16 @@ class _AIDetectionMainWidgetState extends State<AIDetectionMainWidget> {
       var isOneSolutionSudoku = true;
       try {
         var beginCheckTime = DateTime.now();
-        Sudoku(puzzle, strict: true);
+        // Sudoku(puzzle, strict: true);
+        List<int> solution =
+            SudokuNativeHelper.instance!.solve(puzzle, isStrict: true);
         var endCheckTime = DateTime.now();
-        log.d("check one solution time: ${endCheckTime.difference(beginCheckTime)}");
-      } catch (e) {
+        log.d(
+            "check one solution time: ${endCheckTime.difference(beginCheckTime)}");
+        log.d("solution : $solution");
+      } catch (e, stacktrace) {
         // puzzle is not one-solution sudoku
+        log.e(e, stackTrace: stacktrace);
         isOneSolutionSudoku = false;
       }
 

@@ -37,6 +37,7 @@ android {
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        main.jniLibs.srcDirs = ['libs']
     }
 
     lintOptions {
@@ -54,6 +55,10 @@ android {
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
     }
 
     signingConfigs {

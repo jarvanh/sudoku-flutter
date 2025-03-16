@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/sudoku_localizations.dart';
 import 'package:logger/logger.dart' hide Level;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sudoku/native/sudoku.dart';
 import 'package:sudoku/state/sudoku_state.dart';
 import 'package:sudoku/util/localization_util.dart';
 import 'package:sudoku_dart/sudoku_dart.dart';
@@ -169,8 +170,16 @@ void _internalSudokuGenerate(List<dynamic> args) {
   Level level = args[0];
   SendPort sendPort = args[1];
 
-  Sudoku sudoku = Sudoku.generate(level);
-  log.d("数独生成完毕");
+  DateTime beginTime, endTime;
+  beginTime = DateTime.now();
+  // 生成题目速度比较慢,尝试使用native生成 , 解题普遍速度较快,继续使用 sudoku_dart
+  // native 生成 加上 dart 解题 速度提升非常显著
+  List<int> puzzle = SudokuNativeHelper.instance.generate(level.index);
+  Sudoku sudoku = Sudoku(puzzle);
+  // Sudoku sudoku = Sudoku.generate(level);
+  endTime = DateTime.now();
+  log.d(
+      "数独生成完毕 耗时: ${endTime.millisecondsSinceEpoch - beginTime.millisecondsSinceEpoch}'ms");
   sendPort.send(sudoku);
 }
 
