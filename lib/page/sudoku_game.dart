@@ -84,7 +84,13 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                 children: <Widget>[
                   Image(image: logoAssetImage),
                   CupertinoButton(
-                    child: Text("Sudoku"),
+                    child: Text(
+                      AppLocalizations.of(context)!.appName,
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                      ),
+                    ),
                     onPressed: () {
                       Navigator.pop(context, false);
                     },
@@ -95,6 +101,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
         });
     return showAboutDialog(
         applicationIcon: appIcon,
+        applicationName: AppLocalizations.of(context)!.appName,
         context: context,
         children: <Widget>[
           GestureDetector(
@@ -105,8 +112,12 @@ class _SudokuGamePageState extends State<SudokuGamePage>
             onTap: () async {
               if (await canLaunchUrlString(Constant.githubRepository)) {
                 if (Platform.isAndroid) {
-                  await launchUrlString(Constant.githubRepository,
-                      mode: LaunchMode.platformDefault);
+                  await launchUrlString(
+                    Constant.githubRepository,
+                    mode: LaunchMode.externalApplication,
+                    browserConfiguration: BrowserConfiguration(showTitle: true),
+                    webOnlyWindowName: "Sudoku-Flutter Github Repository",
+                  );
                 } else {
                   await launchUrlString(Constant.githubRepository,
                       mode: LaunchMode.externalApplication);
@@ -743,6 +754,9 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                   style: TextStyle(color: Colors.black),
                   textDirection: TextDirection.ltr)));
     }
+
+    var textValueStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w700);
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -757,7 +771,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                   flex: 1,
                   child: Row(children: <Widget>[
                     lifePng,
-                    Text(" x ${_state.life}", style: TextStyle(fontSize: 18))
+                    Text(" x ${_state.life}", style: textValueStyle)
                   ])),
               // indicator
               Expanded(
@@ -765,7 +779,9 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                 child: Container(
                     alignment: AlignmentDirectional.center,
                     child: Text(
-                        "${LocalizationUtils.localizationLevelName(context, _state.level!)} - ${_state.timer} - ${LocalizationUtils.localizationGameStatus(context, _state.status)}")),
+                      "${LocalizationUtils.localizationLevelName(context, _state.level!)} - ${_state.timer} - ${LocalizationUtils.localizationGameStatus(context, _state.status)}",
+                      style: TextStyle(fontSize: 16),
+                    )),
               ),
               // tips
               Expanded(
@@ -775,8 +791,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
                         ideaPng,
-                        Text(" x ${_state.hint}",
-                            style: TextStyle(fontSize: 18))
+                        Text(" x ${_state.hint}", style: textValueStyle)
                       ])))
             ]),
           ),
@@ -843,14 +858,12 @@ class _SudokuGamePageState extends State<SudokuGamePage>
 
   @override
   void didChangeDependencies() {
-    log.d("didChangeDependencies");
     super.didChangeDependencies();
   }
 
   @override
   void didUpdateWidget(SudokuGamePage oldWidget) {
     super.didUpdateWidget(oldWidget);
-    log.d("on did update widget");
   }
 
   @override
@@ -918,7 +931,6 @@ class _SudokuGamePageState extends State<SudokuGamePage>
 
   @override
   Widget build(BuildContext context) {
-    // log.d("on build");
     Scaffold scaffold = Scaffold(
       appBar: AppBar(title: Text(widget.title), actions: [
         IconButton(

@@ -1,7 +1,8 @@
 {
+  "appName": "Sudoku",
   "menuNewGame":"New Game",
   "@menuNewGame":{
-    "description":"menu of 'new gme' button text"
+    "description":"menu of 'new game' button text"
   },
   "menuContinueGame": "Continue Game",
   "@menuContinueGame":{

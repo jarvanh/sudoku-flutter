@@ -1,7 +1,8 @@
 {
+  "appName": "数独酷",
   "menuNewGame":"新游戏",
   "@menuNewGame":{
-    "description":"menu of 'new gme' button text"
+    "description":"menu of 'new game' button text"
   },
   "menuContinueGame": "继续游戏",
   "@menuContinueGame":{

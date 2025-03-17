@@ -82,7 +82,7 @@ class AIDetectPaintPage extends StatelessWidget {
           * where the numbers are located will extend beyond the 9*9 grid
           * (i.e., beyond the 81-square grid).
           * */
-          if(index>81){
+          if (index > 81) {
             return;
           }
           detectRefs[index] = DetectRef(

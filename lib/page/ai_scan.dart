@@ -120,7 +120,7 @@ class AIScanPageState extends State<AIScanPage> {
   }
 
   /// 预测照片中的数独
-  ///
+  /// Predict the number puzzle in the photo.
   _predictPicture() async {
     try {
       // Ensure that the camera is initialized.
@@ -138,12 +138,12 @@ class AIScanPageState extends State<AIScanPage> {
       var sudokuPredictor = await DetectorFactory.getSudokuDetector();
       var digitsPredictor = await DetectorFactory.getDigitsDetector();
 
-      // 数独检测 , 此处需要补充对图片进行剪切处理,降低图片尺寸也许可以加快推理时间？
+      // 数独检测 , 此处需要补充对图片进行剪切处理,降低图片尺寸也许可以加快推理时间 ??
       final picture = await _controller.takePicture();
       final pictureBytes = await picture.readAsBytes();
       ui.Image uiPicture = await decodeImageFromList(pictureBytes);
 
-      // 原相片大小
+      // 原相片大小 origin photo size
       final pictureHeight = uiPicture.height;
       final pictureWidth = uiPicture.width;
 

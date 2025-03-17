@@ -98,7 +98,9 @@ class MyApp extends StatelessWidget {
         }
         SudokuState sudokuState = snapshot.data ?? SudokuState();
         BootstrapPage bootstrapPage = BootstrapPage(title: "Loading");
-        SudokuGamePage sudokuGamePage = SudokuGamePage(title: "Sudoku");
+        SudokuGamePage sudokuGamePage = SudokuGamePage(
+          title: "Sudoku",
+        );
 
         return ScopedModel<SudokuState>(
           model: sudokuState,
@@ -114,7 +116,7 @@ class MyApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate
             ],
-//             locale: Locale("en"), // i18n debug
+            // locale: Locale("en"), // i18n debug
             supportedLocales: AppLocalizations.supportedLocales,
             home: bootstrapPage,
             routes: <String, WidgetBuilder>{

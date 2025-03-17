@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/sudoku_localizations.dart';
 import 'package:logger/logger.dart' hide Level;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:sudoku/effect/sound_effect.dart';
 import 'package:sudoku/native/sudoku.dart';
 import 'package:sudoku/state/sudoku_state.dart';
 import 'package:sudoku/util/localization_util.dart';
@@ -45,7 +46,10 @@ Widget _aiSolverButton(BuildContext context) {
                 color: Colors.blue,
                 child: Text(
                   "$buttonLabel / test /",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontFamily: "montserrat",
+                  ),
                 ),
                 onPressed: () async {
                   log.d("AI Solver Scanner");
@@ -218,6 +222,47 @@ Future _sudokuGenerate(BuildContext context, Level level) async {
 class _BootstrapPageState extends State<BootstrapPage> {
   @override
   Widget build(BuildContext context) {
+
+    Widget logo = Text(
+      "/ suˈdoʊku: /",
+      style: TextStyle(
+        fontFamily: "montserrat",
+        color: Colors.black,
+        fontSize: 65.0,
+      ),
+    );
+
+    Widget buttons = Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        IconButton(
+          onPressed: () async {
+            var languageCode = Localizations.localeOf(context).languageCode;
+            await SoundEffect.sudokuSpeak(languageCode);
+          },
+          icon: Icon(
+            Icons.keyboard_voice_rounded,
+            color: Colors.black45,
+          ),
+        )
+      ],
+    );
+
+    Widget banner = Container(
+      alignment: Alignment.center,
+      width: 400,
+      // color:Colors.yellow,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          logo,
+          buttons,
+        ],
+      ),
+    );
+
     Widget body = Container(
       color: Colors.white,
       padding: EdgeInsets.all(20.0),
@@ -225,16 +270,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
         child: Column(
           children: <Widget>[
             // logo
-            Expanded(
-                flex: 1,
-                child: Container(
-                    alignment: Alignment.center,
-                    color: Colors.white,
-                    width: 280,
-                    height: 280,
-                    child: Image(
-                      image: AssetImage("assets/image/logo.png"),
-                    ))),
+            Expanded(flex: 1, child: banner),
             Expanded(
                 flex: 1,
                 child:
