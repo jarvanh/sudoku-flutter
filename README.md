@@ -46,24 +46,24 @@ about contributing please read [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## environment
 
-- dart SDK: '>=3.0.0 <3.5.0' // records feature support
-- flutter SDK: '^3.0.0'
+- dart SDK: '>=3.0.0 <4.0.0' 
+- flutter SDK: '^3.0.0' // 3.27.3
 - jdk 17 with Gradle Plugin 8.1.1 :new:
 
 ## dependency
 
 - [opencv_dart](https://github.com/rainyl/opencv_dart)
 - [tflite_flutter](https://github.com/tensorflow/flutter-tflite)
-- [sudoku_dart](https://github.com/forfuns/sudoku-dart) (sudoku core opensource  lib  )
+- [sudoku_dart](https://github.com/einsitang/sudoku-dart) (sudoku core opensource  lib)
+- [sudoku-go](https://github.com/einsitang/sudoku-go) // native lib with cgo on `sudoku-flutter` latest version
 - [Hive](https://github.com/hivedb/hive)
 - [scoped_model](https://github.com/brianegan/scoped_model)
-- logger 
-- sprintf
+- Google Firebase // This project utilizes Google Firebase for crash analysis.
 
 ## platform support
 
 - android
-- iOS
+- iOS // <- we haven't tested enough yet
 - ~~WEB (no plan support yet)~~
 
 ## install
