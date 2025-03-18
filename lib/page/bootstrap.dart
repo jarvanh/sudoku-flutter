@@ -112,19 +112,20 @@ Widget _newGameButton(BuildContext context) {
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           onPressed: () {
-            // cancel new game button
+            // cancel  button
             Widget cancelButton = SizedBox(
                 height: 60,
                 width: MediaQuery.of(context).size.width,
                 child: Container(
-                    margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
                     child: CupertinoButton(
-//                      color: Colors.red,
-                      child: Text(AppLocalizations.of(context)!.levelCancel),
-                      onPressed: () {
-                        Navigator.of(context).pop(false);
-                      },
-                    )));
+                  child: Text(
+                    AppLocalizations.of(context)!.levelCancel,
+                    style: TextStyle(color: Colors.black45),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                )));
 
             // iterative difficulty build buttons
             List<Widget> buttons = [];
@@ -135,11 +136,14 @@ Widget _newGameButton(BuildContext context) {
                   height: 60,
                   width: MediaQuery.of(context).size.width,
                   child: Container(
-                      margin: EdgeInsets.all(2.0),
+                      margin: EdgeInsets.all(1.0),
                       child: CupertinoButton(
                         child: Text(
                           levelName,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            color: Colors.blue,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         onPressed: () async {
                           log.d(
@@ -153,13 +157,15 @@ Widget _newGameButton(BuildContext context) {
 
             showCupertinoModalBottomSheet(
               context: context,
+              barrierColor: Colors.black38,
+              topRadius: Radius.circular(20),
               builder: (context) {
                 return SafeArea(
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Material(
                         child: Container(
-                            height: 300,
+                            height: 320,
                             child: Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: buttons))),
@@ -222,7 +228,6 @@ Future _sudokuGenerate(BuildContext context, Level level) async {
 class _BootstrapPageState extends State<BootstrapPage> {
   @override
   Widget build(BuildContext context) {
-
     Widget logo = Text(
       "/ suˈdoʊku: /",
       style: TextStyle(
