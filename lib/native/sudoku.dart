@@ -13,6 +13,8 @@ class SudokuNativeHelper {
   static final DynamicLibrary _dylib = Platform.isAndroid
       ? DynamicLibrary.open("libsudoku.so")
       : DynamicLibrary.process();
+
+  // static final DynamicLibrary _dylib = DynamicLibrary.open("libsudoku.so");
   late final _nf;
 
   SudokuNativeHelper._internal() {
