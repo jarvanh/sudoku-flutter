@@ -14,6 +14,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		E10E5321E9C0ADABD637DEE6 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 50740E2E8873346E51B0CE58 /* GoogleService-Info.plist */; };
+		F0E8A2EC2D8AEEC800ED569B /* libsudoku.so in Frameworks */ = {isa = PBXBuildFile; fileRef = F0E8A2EB2D8AEE8E00ED569B /* libsudoku.so */; };
 		F5E43B6EB5F3624257644EBC /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 539372F4DD0E5F4BD88445FE /* Pods_Runner.framework */; };
 /* End PBXBuildFile section */
 
@@ -49,6 +50,7 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F0E8A2EB2D8AEE8E00ED569B /* libsudoku.so */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libsudoku.so; path = Frameworks/libsudoku.so; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F0E8A2EC2D8AEEC800ED569B /* libsudoku.so in Frameworks */,
 				F5E43B6EB5F3624257644EBC /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -130,6 +133,7 @@
 		B24D7B3768E7C60457DF5227 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F0E8A2EB2D8AEE8E00ED569B /* libsudoku.so */,
 				539372F4DD0E5F4BD88445FE /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
@@ -264,7 +268,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin\n";
 		};
 		747246DB741420F4081B119C /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -408,6 +412,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -644,6 +649,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -770,6 +776,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
+					"$(PROJECT_DIR)/Frameworks",
 				);
 				OTHER_LDFLAGS = (
 					"$(inherited)",
