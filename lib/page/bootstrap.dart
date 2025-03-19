@@ -4,6 +4,8 @@ import 'dart:isolate';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/sudoku_localizations.dart';
 import 'package:logger/logger.dart' hide Level;
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -195,6 +197,7 @@ void _internalSudokuGenerate(List<dynamic> args) {
 
 Future _sudokuGenerate(BuildContext context, Level level) async {
   String sudokuGenerateText = AppLocalizations.of(context)!.sudokuGenerateText;
+
   showDialog(
       context: context,
       barrierDismissible: false,
@@ -205,7 +208,7 @@ Future _sudokuGenerate(BuildContext context, Level level) async {
                 CircularProgressIndicator(),
                 Container(
                     margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: Text(sudokuGenerateText))
+                    child: Text("/ $sudokuGenerateText /", style: TextStyle(fontSize: 13)))
               ]))));
 
   ReceivePort receivePort = ReceivePort();
@@ -247,10 +250,14 @@ class _BootstrapPageState extends State<BootstrapPage> {
             await SoundEffect.sudokuSpeak(languageCode);
           },
           icon: Icon(
+            size: 20,
             Icons.keyboard_voice_rounded,
-            color: Colors.black45,
+            color: Colors.black38,
           ),
         )
+            .animate(onPlay: (ctrl) => ctrl.loop(reverse: true))
+            .scaleXY(end: 1.35, duration: 700.ms, delay: 1200.ms)
+            .blurXY(end: 1.3, duration: 700.ms, delay: 1200.ms)
       ],
     );
 
@@ -266,6 +273,17 @@ class _BootstrapPageState extends State<BootstrapPage> {
           buttons,
         ],
       ),
+    ).animate(onPlay: (ctrl) => ctrl.repeat(reverse: false)).shimmer(
+      angle: 0.65,
+      delay: 800.ms,
+      duration: 3500.ms,
+      colors: [
+        Colors.black,
+        Colors.black45,
+        Colors.white,
+        Colors.black87,
+        Colors.black,
+      ],
     );
 
     Widget body = Container(

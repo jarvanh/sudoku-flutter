@@ -4,6 +4,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/sudoku_localizations.dart';
 import 'package:logger/logger.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -292,6 +293,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                 _state.sudoku!.solution[_chooseSudokuBox] != num) {
               // 填入错误数字 wrong answer on _chooseSudokuBox with num
               _state.lifeLoss();
+
               if (_state.life <= 0) {
                 // 游戏结束
                 return _gameOver();
@@ -754,7 +756,6 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                   style: TextStyle(color: Colors.black),
                   textDirection: TextDirection.ltr)));
     }
-
     var textValueStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.w700);
 
     return Center(
@@ -770,7 +771,9 @@ class _SudokuGamePageState extends State<SudokuGamePage>
               Expanded(
                   flex: 1,
                   child: Row(children: <Widget>[
-                    lifePng,
+                    lifePng
+                        .animate(onInit: (ctrl) => ctrl.repeat())
+                        .shake(delay: 5.seconds, duration: 5.seconds, hz: 56),
                     Text(" x ${_state.life}", style: textValueStyle)
                   ])),
               // indicator
@@ -790,7 +793,8 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                        ideaPng,
+                        ideaPng.animate(onInit: (ctrl) => ctrl.repeat()).shake(
+                            delay: 5.seconds, duration: 5.seconds, hz: 56),
                         Text(" x ${_state.hint}", style: textValueStyle)
                       ])))
             ]),
