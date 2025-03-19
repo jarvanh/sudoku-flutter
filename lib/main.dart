@@ -17,6 +17,7 @@ import 'package:sudoku/state/sudoku_state.dart';
 import 'constant.dart';
 import 'firebase_options.dart';
 import 'ml/detector.dart';
+import 'size_extension.dart';
 
 final Logger log = Logger();
 
@@ -78,6 +79,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SizeConfig.init(context, 390, 844);
     return FutureBuilder<SudokuState>(
       future: _loadState(),
       builder: (context, AsyncSnapshot<SudokuState> snapshot) {

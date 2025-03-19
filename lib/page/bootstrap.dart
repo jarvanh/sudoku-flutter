@@ -12,6 +12,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:sudoku/effect/sound_effect.dart';
 import 'package:sudoku/native/sudoku.dart';
+import 'package:sudoku/size_extension.dart';
 import 'package:sudoku/state/sudoku_state.dart';
 import 'package:sudoku/util/localization_util.dart';
 import 'package:sudoku_dart/sudoku_dart.dart';
@@ -236,7 +237,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
       style: TextStyle(
         fontFamily: "montserrat",
         color: Colors.black,
-        fontSize: 65.0,
+        fontSize: (60.0).r,
       ),
     );
 
