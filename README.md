@@ -38,6 +38,14 @@ about contributing please read [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ![Bootstrap](./document/img/WX20230312-193408.jpg)![Game](./document/img/WX20230312-193423.jpg)
 
+<center>ios screenshot by 2023</center>
+
+### Android
+
+![Bootstrap](./document/img/2025-03-21_bootstrap.jpg)![Game](./document/img/2025-03-21_game.jpg)
+
+<center>android screenshot by 2025</center>
+
 ## plan-to-do
 
 - :ballot_box_with_check: AI sudoku solver with camera - working well :-)
