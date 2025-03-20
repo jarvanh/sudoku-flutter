@@ -4,7 +4,6 @@ import 'dart:isolate';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/sudoku_localizations.dart';
 import 'package:logger/logger.dart' hide Level;
@@ -191,8 +190,9 @@ void _internalSudokuGenerate(List<dynamic> args) {
   Sudoku sudoku = Sudoku(puzzle);
   // Sudoku sudoku = Sudoku.generate(level);
   endTime = DateTime.now();
+  var consumingTie = endTime.millisecondsSinceEpoch - beginTime.millisecondsSinceEpoch;
   log.d(
-      "数独生成完毕 耗时: ${endTime.millisecondsSinceEpoch - beginTime.millisecondsSinceEpoch}'ms");
+      "数独生成完毕 耗时: $consumingTie'ms");
   sendPort.send(sudoku);
 }
 
@@ -209,7 +209,8 @@ Future _sudokuGenerate(BuildContext context, Level level) async {
                 CircularProgressIndicator(),
                 Container(
                     margin: EdgeInsets.fromLTRB(10, 0, 0, 0),
-                    child: Text("/ $sudokuGenerateText /", style: TextStyle(fontSize: 13)))
+                    child: Text("/ $sudokuGenerateText /",
+                        style: TextStyle(fontSize: 13)))
               ]))));
 
   ReceivePort receivePort = ReceivePort();
@@ -237,7 +238,7 @@ class _BootstrapPageState extends State<BootstrapPage> {
       style: TextStyle(
         fontFamily: "montserrat",
         color: Colors.black,
-        fontSize: (60.0).r,
+        fontSize: (55.0).r,
       ),
     );
 
@@ -251,14 +252,17 @@ class _BootstrapPageState extends State<BootstrapPage> {
             await SoundEffect.sudokuSpeak(languageCode);
           },
           icon: Icon(
-            size: 20,
+            size: 18,
             Icons.keyboard_voice_rounded,
-            color: Colors.black38,
+            color: Colors.black26,
           ),
         )
+            .animate()
+            .fadeIn(delay: 1500.ms)
+            .then()
             .animate(onPlay: (ctrl) => ctrl.loop(reverse: true))
-            .scaleXY(end: 1.35, duration: 700.ms, delay: 1200.ms)
-            .blurXY(end: 1.3, duration: 700.ms, delay: 1200.ms)
+            .scaleXY(end: 1.35, duration: 600.ms, delay: 2200.ms)
+            .blurXY(end: 1.2, duration: 600.ms, delay: 2200.ms)
       ],
     );
 
@@ -274,7 +278,16 @@ class _BootstrapPageState extends State<BootstrapPage> {
           buttons,
         ],
       ),
-    ).animate(onPlay: (ctrl) => ctrl.repeat(reverse: false)).shimmer(
+    )
+        .animate()
+        .fadeIn(duration: 1500.ms)
+        .moveY(
+            delay: 800.ms, duration: 500.ms, begin: SizeConfig.screenHeight / 4)
+        .then()
+        .scaleXY(duration: 500.ms, begin: 1.30)
+        .then()
+        .animate(onPlay: (ctrl) => ctrl.repeat(reverse: false))
+        .shimmer(
       angle: 0.65,
       delay: 800.ms,
       duration: 3500.ms,
@@ -289,23 +302,27 @@ class _BootstrapPageState extends State<BootstrapPage> {
 
     Widget body = Container(
       color: Colors.white,
-      padding: EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(25.0),
       child: Center(
         child: Column(
           children: <Widget>[
             // logo
             Expanded(flex: 1, child: banner),
             Expanded(
-                flex: 1,
-                child:
-                    Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-                  // continue the game
-                  _continueGameButton(context),
-                  // new game
-                  _newGameButton(context),
-                  // ai solver scanner
-                  _aiSolverButton(context),
-                ]))
+              flex: 1,
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                // continue the game
+                _continueGameButton(context),
+                // new game
+                _newGameButton(context),
+                // ai solver scanner
+                _aiSolverButton(context),
+              ]).animate().fadeIn(
+                      delay: 1200.ms,
+                      duration: 1000.ms,
+                      curve: Curves.bounceOut),
+            )
           ],
         ),
       ),

@@ -4,10 +4,11 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_gen/gen_l10n/sudoku_localizations.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:logger/logger.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:simple_shadow/simple_shadow.dart';
 import 'package:sudoku/constant.dart';
 import 'package:sudoku/effect/sound_effect.dart';
 import 'package:sudoku/page/sudoku_pause_cover.dart';
@@ -17,7 +18,6 @@ import 'package:sudoku_dart/sudoku_dart.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 final Logger log = Logger();
-
 final ButtonStyle flatButtonStyle = TextButton.styleFrom(
   foregroundColor: Colors.black54,
   shadowColor: Colors.blue,
@@ -55,6 +55,45 @@ const Image lifePng = Image(
   height: 25,
 );
 
+final timerPauseAssetSvg = SvgPicture.asset(
+  "assets/svg/timer_pause.svg",
+  width: 40,
+  height: 40,
+  clipBehavior: Clip.antiAliasWithSaveLayer,
+  colorFilter: ColorFilter.mode(Colors.black54, BlendMode.srcIn),
+);
+
+final lightbulbAssetSvg = SvgPicture.asset(
+  "assets/svg/lightbulb.svg",
+  width: 40,
+  height: 40,
+  clipBehavior: Clip.antiAliasWithSaveLayer,
+  colorFilter: ColorFilter.mode(Colors.black54, BlendMode.srcIn),
+);
+
+final lightbulbDisableAssetSvg = SvgPicture.asset(
+  "assets/svg/lightbulb.svg",
+  width: 40,
+  height: 40,
+  clipBehavior: Clip.antiAliasWithSaveLayer,
+  colorFilter: ColorFilter.mode(Colors.black12, BlendMode.srcIn),
+);
+
+final noteAltAssetSvg = SvgPicture.asset(
+  "assets/svg/note_alt.svg",
+  width: 40,
+  height: 40,
+  clipBehavior: Clip.antiAliasWithSaveLayer,
+  colorFilter: ColorFilter.mode(Colors.black54, BlendMode.srcIn),
+);
+
+final exitToAppAssetSvg = SvgPicture.asset(
+  "assets/svg/exit_to_app.svg",
+  width: 40,
+  height: 40,
+  colorFilter: ColorFilter.mode(Colors.black54, BlendMode.srcIn),
+);
+
 class SudokuGamePage extends StatefulWidget {
   SudokuGamePage({Key? key, required this.title}) : super(key: key);
   final String title;
@@ -65,8 +104,11 @@ class SudokuGamePage extends StatefulWidget {
 
 class _SudokuGamePageState extends State<SudokuGamePage>
     with WidgetsBindingObserver {
-  /// 选中的宫格
+  /// 选中的格子
   int _chooseSudokuBox = 0;
+
+  // 与选中格子形成关联的格子集合 : 行 / 列 / 宫
+  Set<int> _correlationChooseBoxes = {};
 
   /// 感知选中数字
   int _perceptionNum = 0;
@@ -202,11 +244,12 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                               alignment: Alignment.center,
                               child: Text(title,
                                   style: TextStyle(
-                                      color: isWinner
-                                          ? Colors.black
-                                          : Colors.redAccent,
-                                      fontSize: 26,
-                                      fontWeight: FontWeight.bold)))),
+                                    color: isWinner
+                                        ? Colors.black
+                                        : Colors.redAccent,
+                                    fontSize: 28,
+                                    fontWeight: FontWeight.bold,
+                                  )))),
                       Expanded(
                           flex: 2,
                           child: Column(children: [
@@ -377,12 +420,20 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                   _state.cleanRecord(_chooseSudokuBox);
                 }))));
 
-    return Align(
-        alignment: Alignment.centerLeft,
-        child: Container(
-            height: 40,
-            width: MediaQuery.of(context).size.width,
-            child: Row(children: fillTools)));
+    return Container(
+        height: 40,
+        width: MediaQuery.of(context).size.width,
+        child: Align(
+          alignment: Alignment.centerLeft,
+          child: Row(children: fillTools),
+        ));
+    // return Align(
+    //     alignment: Alignment.centerLeft,
+    //     child: Container(
+    //       height: 40,
+    //       width: MediaQuery.of(context).size.width,
+    //       child: Row(children: fillTools),
+    //     ));
   }
 
   Widget _toolZone(BuildContext context) {
@@ -435,7 +486,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
             SoundEffect.answerTips();
             _state.setRecord(index, solution[index]);
             _state.hintLoss();
-            _chooseSudokuBox = index;
+            _updateChooseState(index);
             _gameStackCount();
 
             // update choose state
@@ -495,49 +546,94 @@ class _SudokuGamePageState extends State<SudokuGamePage>
         }
       });
     };
+
+    var _toolContentWrapper =
+        (svgPicture, label, {Color labelColor = Colors.black54}) {
+      return Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
+        alignment: WrapAlignment.center,
+        children: [
+          Container(
+            // color: Colors.black,
+            padding: EdgeInsets.all(5),
+            child: SimpleShadow(child: svgPicture),
+          ),
+          Container(
+            alignment: Alignment.center,
+            width: 80,
+            height: 25,
+            child: Text(
+              label,
+              softWrap: false,
+              overflow: TextOverflow.fade,
+              style: TextStyle(
+                color: labelColor,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ],
+      );
+    };
+
     return Container(
-        height: 50,
+        // color: Colors.black,
         padding: EdgeInsets.all(5),
         child: Row(children: <Widget>[
           // 暂停游戏 pause game button
           Expanded(
               flex: 1,
               child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: CupertinoButton(
-                      padding: EdgeInsets.all(5),
-                      onPressed: pauseOnPressed,
-                      child: Text(pauseText, style: TextStyle(fontSize: 15))))),
+                alignment: Alignment.center,
+                child: CupertinoButton(
+                  padding: EdgeInsets.all(3),
+                  onPressed: pauseOnPressed,
+                  child: _toolContentWrapper(timerPauseAssetSvg, pauseText),
+                ),
+                // child: Text(pauseText, style: TextStyle(fontSize: 15)),
+              )),
           // 提示 tips
           Expanded(
               flex: 1,
               child: Align(
                   alignment: Alignment.center,
                   child: CupertinoButton(
-                      padding: EdgeInsets.all(5),
-                      onPressed: tipsOnPressed,
-                      child: Text(tipsText, style: TextStyle(fontSize: 15))))),
+                    padding: EdgeInsets.all(3),
+                    onPressed: tipsOnPressed,
+                    child: _state.hint > 0
+                        ? _toolContentWrapper(lightbulbAssetSvg, tipsText)
+                        : _toolContentWrapper(
+                            lightbulbDisableAssetSvg, tipsText,
+                            labelColor: Colors.black12),
+                    // child: Text(tipsText, style: TextStyle(fontSize: 15)),
+                  ))),
           // 笔记 mark record
           Expanded(
               flex: 1,
               child: Align(
                   alignment: Alignment.center,
                   child: CupertinoButton(
-                      padding: EdgeInsets.all(5),
-                      onPressed: markOnPressed,
-                      child: Text(
-                          "${_markOpen ? closeMarkText : enableMarkText}",
-                          style: TextStyle(fontSize: 15))))),
+                    padding: EdgeInsets.all(3),
+                    onPressed: markOnPressed,
+                    child: _toolContentWrapper(noteAltAssetSvg,
+                        _markOpen ? closeMarkText : enableMarkText),
+                    // child: Text("${_markOpen ? closeMarkText : enableMarkText}",
+                    //     style: TextStyle(fontSize: 15)),
+                  ))),
           // 退出 exit
           Expanded(
               flex: 1,
               child: Align(
-                  alignment: Alignment.centerRight,
+                  alignment: Alignment.center,
                   child: CupertinoButton(
-                      padding: EdgeInsets.all(5),
-                      onPressed: exitGameOnPressed,
-                      child:
-                          Text(exitGameText, style: TextStyle(fontSize: 15)))))
+                    padding: EdgeInsets.all(3),
+                    onPressed: exitGameOnPressed,
+                    child: _toolContentWrapper(exitToAppAssetSvg, exitGameText),
+                    // child: Text(exitGameText, style: TextStyle(fontSize: 15)),
+                  ))),
+          // 占位符，测试用
+          // Expanded(flex: 5, child: Text("")),
         ]));
   }
 
@@ -554,49 +650,25 @@ class _SudokuGamePageState extends State<SudokuGamePage>
   /// 计算网格背景色
   Color _gridCellBgColor(int index) {
     Color gridCellBackgroundColor;
-    // same zones
-    List<int> zoneIndexes =
-        Matrix.getZoneIndexes(zone: Matrix.getZone(index: index));
-    // same rows
-    List<int> rowIndexes = Matrix.getRowIndexes(Matrix.getRow(index));
-    // same columns
-    List<int> colIndexes = Matrix.getColIndexes(Matrix.getCol(index));
-
-    Set indexSet = Set();
-    indexSet.addAll(zoneIndexes);
-    indexSet.addAll(rowIndexes);
-    indexSet.addAll(colIndexes);
 
     if (index == _chooseSudokuBox) {
+      // 选中的格子
       gridCellBackgroundColor = Color.fromARGB(255, 0x7A, 0xF8, 0xF8);
-    } else if (indexSet.contains(_chooseSudokuBox)) {
+    } else if (_correlationChooseBoxes.contains(index)) {
+      // 关联的格子
       gridCellBackgroundColor = Color.fromARGB(255, 0x44, 0xCE, 0xF6);
     } else {
+      // 其他格子
       if (Matrix.getZone(index: index).isOdd) {
+        // 奇数宫 1,3,5,7 背景为白色 (从 0 开始)
         gridCellBackgroundColor = Colors.white;
       } else {
+        // 偶数宫 0,2,4,6,8 背景为浅灰色
         // gridCellBackgroundColor = Color.fromARGB(255, 0xDF, 0xDF, 0xDF);
         gridCellBackgroundColor = Color.fromARGB(255, 0xEE, 0xEE, 0xEE);
       }
     }
     return gridCellBackgroundColor;
-  }
-
-  /// 选择感知
-  /// 用户触摸每一个框(cell),尝试获得其触摸的数字,然后赋予提醒效果
-  _choosePerception(int index) {
-    Sudoku sudoku = _state.sudoku!;
-    List<int> puzzle = sudoku.puzzle;
-    List<int> record = _state.record;
-
-    int perceptionNum = -1;
-    if (record[index] > 0) {
-      perceptionNum = record[index];
-    } else if (puzzle[index] > 0) {
-      perceptionNum = puzzle[index];
-    }
-
-    _perceptionNum = perceptionNum;
   }
 
   ///
@@ -695,7 +767,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3),
                 itemBuilder: (BuildContext context, int _index) {
-                  double fontSize = 15;
+                  double fontSize = 13;
                   int markNum =
                       _state.mark[index][_index + 1] ? _index + 1 : -1;
                   String markNumText = '${markNum == -1 ? "" : markNum}';
@@ -722,7 +794,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                           decoration: TextDecoration.underline,
                           decorationStyle: TextDecorationStyle.wavy,
                           decorationColor: Colors.deepOrangeAccent,
-                          decorationThickness: 1.8,
+                          decorationThickness: 1.2,
                         ));
                   }
 
@@ -732,9 +804,48 @@ class _SudokuGamePageState extends State<SudokuGamePage>
     return markGrid;
   }
 
+  /// 更新关联
+  /// 用户每次选择框(cell)时,需要更新其关联的 行 列 宫 方便背景色和效果变更
+  _updateCorrelationChooseBox() {
+    // same zones
+    List<int> zoneIndexes =
+        Matrix.getZoneIndexes(zone: Matrix.getZone(index: _chooseSudokuBox));
+    // same rows
+    List<int> rowIndexes =
+        Matrix.getRowIndexes(Matrix.getRow(_chooseSudokuBox));
+    // same columns
+    List<int> colIndexes =
+        Matrix.getColIndexes(Matrix.getCol(_chooseSudokuBox));
+
+    // 关联的格子
+    Set<int> indexSet = Set();
+    indexSet.addAll(zoneIndexes);
+    indexSet.addAll(rowIndexes);
+    indexSet.addAll(colIndexes);
+    _correlationChooseBoxes = indexSet;
+  }
+
+  /// 选择感知
+  /// 用户触摸每一个框(cell),尝试获得其触摸的数字,然后赋予提醒效果
+  _choosePerception(int index) {
+    Sudoku sudoku = _state.sudoku!;
+    List<int> puzzle = sudoku.puzzle;
+    List<int> record = _state.record;
+
+    int perceptionNum = -1;
+    if (record[index] > 0) {
+      perceptionNum = record[index];
+    } else if (puzzle[index] > 0) {
+      perceptionNum = puzzle[index];
+    }
+
+    _perceptionNum = perceptionNum;
+  }
+
   _updateChooseState(index) {
     setState(() {
       _chooseSudokuBox = index;
+      _updateCorrelationChooseBox();
       _choosePerception(index);
     });
   }
@@ -771,9 +882,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
               Expanded(
                   flex: 1,
                   child: Row(children: <Widget>[
-                    lifePng
-                        .animate(onInit: (ctrl) => ctrl.repeat())
-                        .shake(delay: 5.seconds, duration: 5.seconds, hz: 56),
+                    lifePng,
                     Text(" x ${_state.life}", style: textValueStyle)
                   ])),
               // indicator
@@ -783,7 +892,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                     alignment: AlignmentDirectional.center,
                     child: Text(
                       "${LocalizationUtils.localizationLevelName(context, _state.level!)} - ${_state.timer} - ${LocalizationUtils.localizationGameStatus(context, _state.status)}",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(fontSize: 15),
                     )),
               ),
               // tips
@@ -793,8 +902,7 @@ class _SudokuGamePageState extends State<SudokuGamePage>
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                        ideaPng.animate(onInit: (ctrl) => ctrl.repeat()).shake(
-                            delay: 5.seconds, duration: 5.seconds, hz: 56),
+                        ideaPng,
                         Text(" x ${_state.hint}", style: textValueStyle)
                       ])))
             ]),
@@ -857,17 +965,8 @@ class _SudokuGamePageState extends State<SudokuGamePage>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _updateChooseState(0);
     _gaming();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
-  void didUpdateWidget(SudokuGamePage oldWidget) {
-    super.didUpdateWidget(oldWidget);
   }
 
   @override

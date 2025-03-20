@@ -88,9 +88,10 @@ class MyApp extends StatelessWidget {
               color: Colors.white,
               alignment: Alignment.center,
               child: Center(
-                  child: Text('Sudoku Application initializing...',
-                      style: TextStyle(color: Colors.black),
-                      textDirection: TextDirection.ltr)));
+                child: Text('Sudoku Application initializing...',
+                    style: TextStyle(color: Colors.black, fontSize: 18),
+                    textDirection: TextDirection.ltr),
+              ));
         }
         if (snapshot.hasError) {
           log.w("here is builder future throws error you should see it");

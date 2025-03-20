@@ -1,18 +1,22 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SizeConfig {
   static late MediaQueryData _mediaQueryData;
+
   /// 设备宽度
   static double screenWidth = 0;
+
   /// 设备高度
   static double screenHeight = 0;
+
   /// 方向
   static late Orientation orientation;
+
   /// 设计图宽度
   static double inputHeight = 390;
+
   /// 设计图宽度
   static double inputWidth = 844;
   static late EdgeInsets padding;
@@ -45,8 +49,6 @@ double getProportionateScreenWidth(num inputWidth) {
 double getProportionateScreenHeight(num inputHeight) {
   return inputHeight * SizeConfig.scaleHeight;
 }
-
-
 
 /// 对num进行扩展，可直接使用1.2.w的形式代替getProportionateScreenWidth(1.2)
 extension SizeExtension on num {
