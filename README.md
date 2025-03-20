@@ -38,13 +38,13 @@ about contributing please read [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ![Bootstrap](./document/img/WX20230312-193408.jpg)![Game](./document/img/WX20230312-193423.jpg)
 
-<center>ios screenshot by 2023</center>
+<p align="center">ios screenshot by 2023</p>
 
 ### Android
 
 ![Bootstrap](./document/img/2025-03-21_bootstrap.jpg)![Game](./document/img/2025-03-21_game.jpg)
 
-<center>android screenshot by 2025</center>
+<p align="center">android screenshot by 2025</p>
 
 ## plan-to-do
 
